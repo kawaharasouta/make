@@ -1,9 +1,12 @@
 #include<stdio.h>
-extern int fee_count, fie_count, foe_count, fum_count;
-extern int yylex(void);
-
+#include<counter.h>
 int main(int argc, char *argv[]){
-	yylex();
-	printf("%d %d %d %d\n", fee_count, fie_count, foe_count, fum_count);
+	int counts[4];
+	counter(counts);
+	int i;
+	for(i = 0; i < 4; i++){
+		printf("%d ",counts[i]);
+	}
+	printf("\n");
 	return 0;
 }
