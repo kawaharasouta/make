@@ -1,31 +1,31 @@
 #VPATH = src
+CC = gcc
+LEX = flex
 vpath %.c src
 vpath %.l src
 vpath %.h include
 CPPFLAGS = -I include
 
-count_words: count_words.o counter.o lexer.o -lfl
-	gcc $(CPPFLAGS) $^ -o $@
+#Dependency
+count_words: counter.o lexer.o -lfl
+count_words.o: counter.h
+counter.o: counter.h lexer.h
+lexer.o: lexer.h
 
-count_words.o: count_words.c counter.h
-	gcc $(CPPFLAGS) -c $<
+#Production rule
+%.o: %.c
+	$(COMPILE.c) $(OUTPUT_OPTION) $<
+%.c: %.l
+	@$(RM) $@
+	$(LEX.l) $< > $@
+%: %.o
+	$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
-counter.o: counter.c counter.h lexer.h
-	gcc $(CPPFLAGS) -c $<
-
-lexer.o: lexer.c include/lexer.h
-	gcc $(CPPFLAGS) -c $<
-
-lexer.c: lexer.l
-	flex -t $< > $@
-
+#Pseudo target
 .PHONY: install remove clean
 install:
 	cp count_words /home/khwarizmi/bin/
-
 remove: 
 	rm /home/khwarizmi/bin/count_words
-
 clean:
 	rm *.o
-	rm *.c
