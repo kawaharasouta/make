@@ -13,12 +13,15 @@ counter.o: counter.h lexer.h
 lexer.o: lexer.h
 
 #Production rule
-%.o: %.c
+#%.o: %.c
+.c.o:
 	$(COMPILE.c) $(OUTPUT_OPTION) $<
-%.c: %.l
+#%.c: %.l
+.l.c:
 	@$(RM) $@
 	$(LEX.l) $< > $@
-%: %.o
+#%: %.o
+.o:
 	$(LINK.o) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
 #Pseudo target
